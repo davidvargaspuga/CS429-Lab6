@@ -67,10 +67,13 @@ class k_means:
                     print(np.sum((current_centroid-original_centroid)/original_centroid*100.0))
                     optimized = False
 
+                
             if optimized:
                 break
 
-            print("centroids", self.centroids)
+            # print("centroids", self.centroids)
+            
+
 
 
 

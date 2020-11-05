@@ -14,21 +14,28 @@ def euclidean_distance(x1, x2):
     return np.sqrt(np.sum((x1-x2)**2))
 
 class KMeans:
-    def __init__(self, k=8, max_iters=1000, plot_steps=True) -> None:
+    def __init__(self, k=8, max_iters=1000000, plot_steps=True) -> None:
         self.k = k
         self.max_iters = max_iters
         self.plot_steps = plot_steps
 
         self.clusters = [[] for _ in range(self.k)]
         self.centroids = []
+        
+        self.true_centroids = pd.read_csv("synthetic/synthetic-gt.txt", header=None)
+        self.true_centroids = self.true_centroids.values
 
     def fit(self, data):
         self.data = data
         self.n_samples, self.n_features = data.shape
 
         random_sample_indices = np.random.choice(self.n_samples, self.k, replace=False)
+        print("RSIs", random_sample_indices)
+
         self.centroids = [self.data[idx] for idx in random_sample_indices]
 
+        for item in self.centroids:
+            print("PRE-LEARNING", item)
         for _ in range(self.max_iters):
             self.clusters = self._create_clusters(self.centroids)
 
@@ -39,8 +46,13 @@ class KMeans:
             self.centroids = self._get_centroids(self.clusters)
             # if self.plot_steps:
             #     self.plot()
-
+                        
             if self._is_converged(centroids_old, self.centroids):
+                for item in self.centroids:
+                    print("GUESSED ", item)
+
+                for item in self.true_centroids:
+                    print("ACTUAL ", item)
                 break
 
         if self.plot_steps:
